@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Calculator</title>
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script src="stateManager.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <script src="https://unpkg.com/redux@4.0.5/dist/redux.js"></script>
+    <script type="text/babel">
+        class Calculator extends React.Component {
+            state = {
+                num1: 0,
+                num2: 0
+            };
+            render() {
+                const { result, add, sub, mul, divide } = this.props,
+                    { num1, num2 } = this.state
+                return (
+                    <div>
+                        <h1>Calculator</h1>
+                        <hr />
+                        <input type="number" onChange={evt => this.setState({ num1: parseInt(evt.target.value) })} />
+                        <input type="number" onChange={evt => this.setState({ num2: parseInt(evt.target.value) })} />
+                        <br />
+                        <input type="button" value="Add" onClick={() => add(num1, num2)} />
+                        <input type="button" value="Subtract" onClick={() => sub(num1, num2)} />
+                        <input type="button" value="Multiply" onClick={() => mul(num1, num2)} />
+                        <input type="button" value="Divide" onClick={() => divide(num1, num2)} />
+                        <div>[ {result} ]</div>
+                    </div>
+                )
+            }
+        }
+        function calculatorReducer(currentState = 0, action) {
+            if (action.type === 'ADD') return action.num1 + action.num2;
+            if (action.type === 'SUB') return action.num1 - action.num2;
+            if (action.type === 'MUL') return action.num1 * action.num2;
+            if (action.type === 'DIV'){
+                if( action.num2 <= 0) return "cannt divide"
+                return action.num1 / action.num2;
+            }
+            return currentState;
+        }
+        const store = Redux.createStore(calculatorReducer);
+        const calculatorActionCreators = {
+            add(a, b) {
+                const action = { type: 'ADD', num1: a, num2: b };
+                return action;
+            },
+            sub(a, b) {
+                const action = { type: 'SUB', num1: a, num2: b };
+                return action;
+            },
+            mul(a, b) {
+                const action = { type: 'MUL', num1: a, num2: b };
+                return action;
+            },
+            divide(a, b){
+                const action = { type: 'DIV', num1: a, num2: b };
+                return action;
+            },
+        }
+        const calculatorActionDispatchers = Redux.bindActionCreators(calculatorActionCreators, store.dispatch);
+        function renderCalculator() {
+            const result = store.getState()
+            ReactDOM.render(
+                <Calculator result={result} {...calculatorActionDispatchers} />
+                , document.getElementById('root'));
+        }
+        renderCalculator();
+        store.subscribe(renderCalculator)
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Products</title>
+
+    <style>
+
+        body{ 
+
+            margin-left: 10px;
+
+        }
+
+        section{
+
+            margin-bottom: 10px;
+
+        }
+
+        .field{
+
+            margin-bottom:10px;
+
+        }
+
+        .edit label{
+
+            display : block;
+
+        }
+
+        section.edit {
+
+            padding : 10px;
+
+            border : 1px solid black;
+
+            width : 500px;
+
+        }
+
+        ol{ 
+
+            width : 500px;
+
+            list-style: none;
+
+            -webkit-padding-start: 0px;
+
+        }
+
+        li{ 
+
+            margin-bottom: 10px;
+
+            padding : 10px;
+
+            border-radius: 5px;
+
+            border : 1px solid gray;
+
+        }
+
+        .name {
+
+            font-size: 18pt;
+
+            padding-bottom: 5px;
+
+        }
+
+        .price {
+
+            font-size: 15pt;
+
+            font-style: italic;
+
+            font-weight: bold;
+
+        }
+
+        .outofstock {
+
+            color : red;
+
+            text-decoration: line-through;
+
+            font-style: italic;
+
+        }
+
+        .stats{
+
+            font-size: 18pt;
+
+        }
+
+    </style>
+
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <!-- <script src="stateManager.js"></script> -->
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <script src="https://unpkg.com/redux@4.0.5/dist/redux.js"></script>
+
+
+    <script type="text/babel">
+
+class Products extends React.Component{
+
+state = { 
+
+    totalProducts :[],
+
+    name : '',
+
+    description : '',
+
+    price : 0,
+
+    outOfStock:''
+
+};
+onAddNewProductClick = () => {
+
+    const { addNew } = this.props,
+
+        { name, description, price } = this.state;
+
+    addNew(name, description, price);
+
+};
+
+toggleProduct= (event) => {
+     if ( event.target.checked ) {
+        this.setState({ outOfStock: "outofstock"})
+    }
+}
+
+render(){
+
+    const { data } = this.props;
+
+    return(
+
+        <div>
+
+            <h3>Products</h3>
+
+            <hr/>
+
+            <section className="stats">
+
+                <span className="outofstock">1</span>
+
+                <span> / </span>
+
+                <span>{data.length}</span>
+
+            </section>
+
+            <section className="edit">
+
+                <div className="field">
+
+                    <label htmlFor="">Name :</label>
+
+                    <input type="text" onChange={ evt => this.setState({ name: evt.target.value})} />
+
+                </div>
+
+                <div className="field">
+
+                    <label htmlFor="">Description :</label>
+
+                    <input type="text" onChange={ evt => this.setState({ description: evt.target.value})} />
+
+                </div>
+
+                <div className="field">
+
+                    <label htmlFor="">Price :</label>
+
+                    <input type="number" onChange={ evt => this.setState({ price: parseInt(evt.target.value) })}/>
+
+                </div>
+
+                <div className="field">
+
+                    <input type="button" value="Add Product" onClick={ this.onAddNewProductClick } />
+
+                </div>
+
+            </section>
+
+            
+
+            <section className="list">
+
+                <ol ngFor ="var  a of this.state.totalProducts">
+
+                    <li>
+
+                        <span className="name">Product Name - 1</span>
+
+                        <div>Aute sunt ea occaecat est voluptate sint ex non reprehenderit in velit. Commodo anim incididunt irure id et quis laborum veniam pariatur esse culpa ex sunt. Veniam nostrud dolor voluptate nulla tempor eiusmod excepteur sunt non pariatur consequat nulla. Amet dolor do minim eiusmod aliquip est fugiat voluptate ipsum incididunt ex magna in elit. Commodo occaecat est veniam elit laboris ipsum in amet aliqua ex proident irure. Esse quis irure id qui cupidatat irure aliqua quis sit ex fugiat velit eu. Cupidatat magna pariatur enim enim dolore commodo ut aliquip occaecat.</div>
+
+                        <div className="price">Price</div>
+
+                        <input type="checkbox" />
+
+                        <label htmlFor="">Out of Stock</label>
+
+                        <br/>
+
+                        <input type="button" value="Remove" />
+
+                    </li>
+
+                    <li>
+
+                        <span className="name outofstock">Product Name - 2</span>
+
+                        <div>Elit nulla pariatur eiusmod sunt ut ad laboris. Aliqua incididunt anim do sint tempor mollit. Nulla aliquip sunt veniam adipisicing exercitation reprehenderit magna. Mollit magna do velit eiusmod culpa ex ea labore. Lorem minim velit esse ipsum culpa. Voluptate amet id incididunt ad excepteur consequat nulla ullamco.</div>
+
+                        <div className="price">Price</div>
+
+                        <input type="checkbox" />
+
+                        <label htmlFor="">Out of Stock</label>
+
+                        <br/>
+
+                        <input type="button" value="Remove" />
+
+                    </li>
+                    <li>
+                        <span className="name {this.state.outOfStock} ">{a.name}</span>
+
+                        <div>{a.description}</div>
+
+                        <div className="price">{a.price}</div>
+
+                        <input type="checkbox" name={a.name} value={a.name} onClick ="toggleProduct($event)"  />
+
+                        <label htmlFor="">Out of Stock</label>
+
+                        <br/>
+
+                        <input type="button" value="Remove" />
+
+                    </li>
+
+                </ol>
+
+                <input type="button" value="Remove Out Of Stock" />
+
+            </section>
+
+        </div>
+
+    )
+
+}
+
+}
+
+function productsReducer(currentState = [ ], action){
+
+if (action.type === 'ADD_PRODUCT'){
+
+    const newState = [ ...currentState, action.payload ];
+
+    return newState;
+
+}
+return currentState;
+
+}
+
+const store = Redux.createStore(productsReducer);
+
+let newProductId = 0;
+const productActionCreators = {
+
+addNew(name, description, price){
+
+    const newProduct = {
+
+        id : ++newProductId,
+
+        name : name,
+
+        description : description,
+
+        price : price
+
+    };
+
+    this.state.totalProducts.push(newProduct);
+
+    const action = { type : 'ADD_PRODUCT' , payload : newProduct};
+
+    return action;
+
+}
+
+}
+
+const productActionDispatchers = Redux.bindActionCreators(productActionCreators, store.dispatch);
+
+function renderApp(){
+
+const products = store.getState();
+
+ReactDOM.render(
+
+        <Products data={products} {...productActionDispatchers} />
+
+    , document.getElementById('root')
+
+)
+
+}
+
+renderApp();
+
+store.subscribe(renderApp);
+    </script>
+
+</head>
+
+<body>
+
+    <div id="root">
+
+    </div>
+
+</body>
+
+</html>

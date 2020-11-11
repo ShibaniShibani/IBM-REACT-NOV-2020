@@ -1,14 +1,13 @@
+import remove from './remove';
 
 function removeOutOfStock(products /* to be fixed */) {
-
-    const productsToRemove = products.filter(p => p.isOutOfStock);
-
-    const action = { type: 'REMOVE_MANY_PRODUCTS', payload: productsToRemove };
-
-    return action;
-
+    return function(dispatch){
+        const productsToRemove = products.filter(p => p.isOutOfStock);
+        productsToRemove
+            .forEach(productToRemove => {
+                remove(productToRemove)(dispatch);
+            });
+    }
 }
-
-
 
 export default removeOutOfStock;
